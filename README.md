@@ -1,122 +1,122 @@
-
----
-
 # Human Activity Recognition (HAR) Using Smartphone Accelerometer Data
 
 ## Overview
 
-This project focuses on classifying six human activities using accelerometer data from the [UCI HAR Dataset](https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones).
-
-All classification models were built using **decision trees** and tested on three different types of features:
-
-1. **Raw Accelerometer Features** – Mean of `acc_x`, `acc_y`, `acc_z`
-2. **TSFEL-Extracted Features** – Statistical and temporal domain features
-3. **Provided Features** – Precomputed features from `X_train.txt` and `X_test.txt`
+This project focuses on recognizing six common human activities using smartphone-based accelerometer data. The goal is to build reliable models using both classical machine learning (decision trees) and deep learning (neural networks). We used features from raw signals, TSFEL, and the dataset's provided features. Augmentation and self-recorded data were also added to improve model performance.
 
 ---
 
 ## Dataset
 
-* Source: UCI HAR Dataset
-* Activities: `WALKING`, `WALKING_UPSTAIRS`, `WALKING_DOWNSTAIRS`, `SITTING`, `STANDING`, `LAYING`
-* Sensors Used: Accelerometer (x, y, z axes)
-* Sampling Rate: 50 Hz
-* Window Length: 128 readings per sample (\~2.56 seconds)
+* **Source**: [UCI HAR Dataset](https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones)
+* **Participants**: 30 people performing 6 activities
+* **Activities**:
+
+  * WALKING
+  * WALKING\_UPSTAIRS
+  * WALKING\_DOWNSTAIRS
+  * SITTING
+  * STANDING
+  * LAYING
+* **Sensors**: Accelerometer and gyroscope (x, y, z axes)
+* **Sampling Rate**: 50 Hz
+* **Window Size**: 128 readings (\~2.56 seconds)
+* **Additional Data**: Extra accelerometer recordings were collected and added to increase robustness
 
 ---
 
-## Libraries Used
-
-* `pandas`, `numpy` – Data handling and manipulation
-* `matplotlib`, `seaborn` – Visualization
-* `scikit-learn` – PCA, `DecisionTreeClassifier`, evaluation metrics
-* `tsfel` – Feature extraction (statistical and temporal domains)
-* `tqdm` – Progress display during extraction
-
----
-
-## Methodology
-
-### Data Preparation
-
-* Loaded and combined accelerometer signals from the dataset
-* Mapped activity labels to numeric classes
-* Organized training and testing sets
-
-### Feature Extraction
-
-* **Raw Features**: Computed mean of `acc_x`, `acc_y`, and `acc_z` per sample
-* **TSFEL Features**: Extracted statistical and temporal features using `tsfel`
-* **Provided Features**: Used directly from dataset files (`X_train.txt`, `X_test.txt`)
-
-### Dimensionality Reduction
-
-* Applied PCA to all three feature sets
-* Plotted 2D and 3D PCA projections to assess class separability
-
-### Correlation Analysis
-
-* Generated correlation matrices for each feature set
-* Identified and noted highly correlated features (correlation > 0.9)
-
-### Classification with Decision Trees
-
-* Trained a `DecisionTreeClassifier` on each feature type
-* Evaluated models using:
-
-  * Accuracy
-  * Precision
-  * Recall
-  * Confusion Matrix
-* Tested multiple tree depths and plotted accuracy vs depth
-
----
-
-## Results
-
-| Feature Type      | Accuracy | Precision | Recall   |
-| ----------------- | -------- | --------- | -------- |
-| Raw Accelerometer | Moderate | Moderate  | Moderate |
-| TSFEL Features    | High     | High      | High     |
-| Provided Features | Good     | Good      | Good     |
-
-* **TSFEL features** produced the best results due to detailed statistical and temporal information
-* **Raw features** were less effective due to lower dimensionality and high noise
-* **Tree depth** significantly influenced performance and overfitting
-
----
-
-## Visualizations
-
-* Accelerometer waveforms per activity
-* Total acceleration magnitude plots
-* 3D trajectories of body movement
-* PCA scatter plots (2D and 3D)
-* Correlation heatmaps
-* Confusion matrices
-* Accuracy vs Tree Depth plots
-
----
-
-## File Structure
+## Project Structure
 
 ```
-├── data/          # Raw and processed accelerometer data
-├── features/      # Extracted TSFEL features and provided features
-├── analysis/      # Plots: PCA, correlation, confusion matrices
-├── models/        # Decision tree training and evaluation scripts
-├── scripts/       # Preprocessing and utility scripts (e.g., CombineScript.py)
+├── data/          # Raw and processed signal data
+├── features/      # TSFEL and provided features
+├── models/        # ML and NN training code
+├── analysis/      # Plots and evaluation outputs
+├── scripts/       # Preprocessing and utility functions
 ├── README.md
 ```
 
 ---
 
-## Notes
+## Methodology
 
-* All models were trained and tested **only using decision trees**
-* TSFEL was configured to extract **statistical** and **temporal** features only
-* Evaluation was consistent across all feature sets for fair comparison
-* PCA and correlation analysis were used to better understand feature behavior
+### 1. Data Preparation
+
+* Combined raw signals (`acc_x`, `acc_y`, `acc_z`) into samples
+* Applied windowing with offset to create stable segments
+* Used stratified train-test split to balance activity labels
+
+### 2. Feature Extraction
+
+* **Raw features**: Mean of `acc_x`, `acc_y`, `acc_z`
+* **TSFEL features**: Extracted statistical and temporal features using the TSFEL library
+* **Provided features**: Precomputed features from the dataset (`X_train.txt`, `X_test.txt`)
+
+### 3. Visualization & Analysis
+
+* **PCA** was used to reduce dimensionality and visualize separability
+* **Correlation heatmaps** helped identify redundant features
+
+### 4. Models Used
+
+* **Decision Tree (Scikit-learn)**: Trained and evaluated on all three feature types
+* **Custom Decision Tree**: Implemented from scratch using NumPy and Pandas
+* **Neural Network (PyTorch)**: Trained on TSFEL and augmented data
+* **Scratch Neural Network**: Basic NN written from scratch for learning
+
+### 5. Data Augmentation
+
+* Used AugLy to create new samples (e.g., with noise or time shifts)
+* Combined with self-collected data to make models more robust
+
+---
+
+## Results
+
+| Model                      | Feature Type      | Accuracy            |
+| -------------------------- | ----------------- | ------------------- |
+| Decision Tree              | Raw Accelerometer | Moderate (\~70–75%) |
+| Decision Tree              | TSFEL Features    | High (\~90–92%)     |
+| Decision Tree              | Provided Features | Good (\~85–88%)     |
+| Neural Network (PyTorch)   | TSFEL Features    | \~93%               |
+| Neural Network (Augmented) | TSFEL + Augmented | **\~95%**           |
+| Scratch Neural Network     | TSFEL Features    | \~90–93%            |
+| Scratch Decision Tree      | TSFEL Features    | \~84%               |
+
+* TSFEL features gave the best overall performance
+* Neural networks performed better than decision trees, especially with augmentation
+* Raw features were the least effective due to low information content
+
+---
+
+## Visualizations
+
+* Raw signal plots for each activity
+* Acceleration magnitude trends
+* 2D and 3D PCA scatter plots
+* Correlation heatmaps
+* Confusion matrices
+* Accuracy vs decision tree depth plots
+
+---
+
+## Future Work
+
+* Deploy models on mobile or wearable devices
+* Add more activity types or transitions
+* Try RNNs or Transformers for sequential modeling
+* Analyze misclassifications and edge cases
+
+---
+
+## Acknowledgements
+
+* UCI HAR Dataset
+* Libraries used: NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, PyTorch, TSFEL, AugLy
+
+---
+
+If you're interested in time-series analysis, wearable sensing, or human activity recognition, feel free to reach out!
 
 ---
 
