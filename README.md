@@ -116,7 +116,5 @@ This project focuses on recognizing six common human activities using smartphone
 
 ---
 
-If you're interested in time-series analysis, wearable sensing, or human activity recognition, feel free to reach out!
-
 ---
 
