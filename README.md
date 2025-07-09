@@ -72,16 +72,16 @@ This project focuses on recognizing six common human activities using smartphone
 ---
 
 ## Results
+| Model                      | Feature Type           | Accuracy             |
+| -------------------------- | ---------------------- | -------------------- |
+| Decision Tree              | TSFEL Features         | **93%**              |
+| Decision Tree (Scratch)    | Time-Domain Features   | **91%**              |
+| Neural Network (PyTorch)   | TSFEL Features         | **97%**              |
+| Neural Network (Scratch)   | TSFEL Features         | **95%**              |
+| Neural Network (Augmented) | TSFEL + Augmented Data | **87% (mixed-sample)** |
+| Decision Tree              | Provided Features      | \~85–88%             |
+| Decision Tree              | Raw Accelerometer      | \~70–75%             |
 
-| Model                      | Feature Type      | Accuracy            |
-| -------------------------- | ----------------- | ------------------- |
-| Decision Tree              | Raw Accelerometer | Moderate (\~70–75%) |
-| Decision Tree              | TSFEL Features    | High (\~90–92%)     |
-| Decision Tree              | Provided Features | Good (\~85–88%)     |
-| Neural Network (PyTorch)   | TSFEL Features    | \~93%               |
-| Neural Network (Augmented) | TSFEL + Augmented | **\~95%**           |
-| Scratch Neural Network     | TSFEL Features    | \~90–93%            |
-| Scratch Decision Tree      | TSFEL Features    | \~84%               |
 
 * TSFEL features gave the best overall performance
 * Neural networks performed better than decision trees, especially with augmentation
